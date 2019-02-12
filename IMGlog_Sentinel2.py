@@ -23,11 +23,12 @@ print projectpath
 print '\nThis can take a while!\n'
 
 # Traverse the tree and list the TIF files
-tl = []
-for x in os.walk(projectpath):
-    for y in glob(os.path.join(x[0], '*.jp2')):
-        tl.append(y)
-
+listfile = projectpath + '\\Temp-Imagelogger.TMP'
+os.system('dir "' + projectpath + '\\*.jp2" /s /b > "' + listfile + '"')
+f = open(listfile)
+tl = f.readlines()
+f.close()
+os.system('del "' + listfile + '"')
 # make a list of lists, w/ possible newlines stripped out
 r = [[i.split('\n')[0]] for i in tl]
 
