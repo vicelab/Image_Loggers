@@ -47,7 +47,8 @@ for i in fl:
     filename = i[0].split('\\')[-1]
     i.append(filename)   # just the name of the file
     i.append(i[0].replace(filename, '')) #just the path of the file
-
+    if filename[0:8] =='LC08_CU_':
+        filename = filename[0:8] + 'XX' + filename[8:33] + filename[34:38] + filename[39:]  # for experimental files to be parseable
     # scan for date [3]
     if len(filename) > 46 and filename[16:19] == '_20':
         d = filename[17:21] +'-' +filename[21:23] +'-' +filename[23:25]  # insert dashes into date
@@ -99,10 +100,11 @@ for i in fl:
 
     # check which Band [6]
     proc = 'ToA'
+    if filename[0:8] == 'LC08_CU_':
+        proc = 'Srf'
     if len(filename) > 46:
         band = filename[41:44]
         if band.isupper():
-
             band = band.replace('.','')
             if len(band) == 2 and band[0] == 'B':
                 band = band[0] + '0' + band[1]
@@ -110,7 +112,7 @@ for i in fl:
                 band = 'QA'
                 qa = ' - pre-collection'
         else:
-            proc = 'SR'
+            proc = 'Srf'
             dpos = filename.rfind('_')
             epos = filename.rfind('.')
             band = filename[dpos+1 : epos]
@@ -186,6 +188,8 @@ for i in fl:
     # check which correction Lvl [12]
     if  len(filename) > 46:
         d = filename[5:9]
+        if d[0:3] == 'CU_':
+            d = 'CU'
         i.append(d)
     else:
         i.append('')
