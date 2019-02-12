@@ -56,7 +56,9 @@ for i in fl:
             dates.append(d)
         i.append(d)
     else:
-        dpos =  i[2].rfind('_20')
+        dpos = i[2].rfind('_20')
+        dpos = i[2].rfind('\\',0,dpos)
+        dpos = i[2].find('_20',dpos)
         if dpos > 0:
             d = i[2][dpos +1:dpos +5] + '-' + i[2][dpos +5:dpos +7] + '-' + i[2][dpos +7:dpos +9]  # insert dashes into date
             i.append(d)# check if date is known and make sure it contains no letters
@@ -96,12 +98,30 @@ for i in fl:
             i.append('unknown')
 
     # check which Band [6]
+    proc = 'ToA'
     if len(filename) > 46:
         band = filename[41:44]
-        if band[2] == '.':
+        if band.isupper():
+
             band = band.replace('.','')
-            if band[0] == 'B':
+            if len(band) == 2 and band[0] == 'B':
                 band = band[0] + '0' + band[1]
+            elif band == 'BQA':
+                band = 'QA'
+                qa = ' - pre-collection'
+        else:
+            proc = 'SR'
+            dpos = filename.rfind('_')
+            epos = filename.rfind('.')
+            band = filename[dpos+1 : epos]
+            if band[0:4] == 'band':
+                band = 'B0' + filename[epos-1]
+            elif band == 'aerosol':
+                band = 'Mask'
+            elif band == 'qa':
+                band = 'QA'
+                epos = filename.rfind('_',0,dpos-1)
+                qa = ' - ' + filename[epos+1:dpos]
     else:
         band = 'Mask'
     i.append(band)
@@ -131,8 +151,8 @@ for i in fl:
         i.append(' - Thermal IR 2')
     elif band == 'CLO':
         i.append(' - clouds')
-    elif band == 'BQA':
-        i.append(' - qual. ass.')
+    elif band == 'QA':
+        i.append(qa)
     elif band == 'Mask':
         d = filename.rfind('_')
         e = filename.find('.')
@@ -145,7 +165,7 @@ for i in fl:
         d = filename[38:40]
         i.append(d)
     else:
-        i.append('post-proc')
+        i.append('')
 
     # check which collection # [9]
     if  len(filename) > 46:
@@ -160,8 +180,17 @@ for i in fl:
     else:
         i.append('30m')
 
+    # check Proc Lvl [11]
+    i.append(proc)
 
-# find day numbers [11]
+    # check which correction Lvl [12]
+    if  len(filename) > 46:
+        d = filename[5:9]
+        i.append(d)
+    else:
+        i.append('')
+
+# find day numbers [13]
 dates.sort()
 for i in fl:
     if i[3] in dates:
@@ -185,10 +214,10 @@ outputfile = root.filename.replace('/','\\')
 
 print outputfile
 
-csvtxt = ['Day,Date,Band,Res,Path,Row,Category,Collection,Flag,Name,Path,Path including Name\n']
+csvtxt = ['Day,Date,Band,Proc,Res,Path,Row,CorrLvl,Category,Collection,Flag,Name,Path,Path including Name\n']
 # build csv
 for i in fl:
-    csvtxt.append(str(i[11]) + ',' + i[3] + ',' + i[6]  + i[7] + ',' + i[10] + ',' + i[4] + ',' + i[5] + ',' + i[8] + ',' + i[9] + ',,' + i[1] + ',' + i[2] + ',' + i[0] + '\n')
+    csvtxt.append(str(i[13]) + ',' + i[3] + ',' + i[6]  + i[7] + ',' + i[11] + ',' + i[10] + ',' + i[4] + ',' + i[5] + ',' + i[12] + ',' + i[8] + ',' + i[9] + ',,' + i[1] + ',' + i[2] + ',' + i[0] + '\n')
 
 f = open(outputfile, 'w')
 f.writelines(csvtxt)
