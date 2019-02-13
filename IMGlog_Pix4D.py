@@ -70,15 +70,15 @@ for i in fl:
     elif '_dtm.tif' in i[0]:
         i.append('dtm')
     elif 'blue.tif' in i[0]:
-        i.append('blue')
+        i.append('1-blue')
     elif 'red.tif' in i[0]:
-        i.append('red')
+        i.append('3-red')
     elif 'green.tif' in i[0]:
-        i.append('green')
+        i.append('2-green')
     elif 'nir.tif' in i[0]:
-        i.append('nir')
+        i.append('5-nir')
     elif 'red edge.tif' in i[0]:
-        i.append('red edge')
+        i.append('4-red edge')
     elif '_ndvi' in i[0]:
         i.append('ndvi')
     elif '_ndre' in i[0]:
