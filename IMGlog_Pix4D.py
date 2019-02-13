@@ -47,12 +47,12 @@ for i in r:
 dates = []
 # Parse file names and find attributes
 for i in fl:
-    # split the file name
+    # split the file name #[0][1][2]
     filename = i[0].split('\\')
     i.append(filename[-1])
     i.append(i[0].replace(filename[-1], ''))
 
-    # find categories
+    # find categories [3]
     if '_dsm.tif' in i[0] or '_dtm.tif' in i[0]:
         i.append('relief')
     elif '_mosaic_' in i[0]:
@@ -64,7 +64,7 @@ for i in fl:
     else:
         i.append('unknown')
 
-    # find types
+    # find types[4]
     if '_dsm.tif' in i[0]:
         i.append('dsm')
     elif '_dtm.tif' in i[0]:
@@ -88,7 +88,7 @@ for i in fl:
     else:
         i.append('unknown')
 
-    # scan for dates
+    # scan for dates[5]
     dpos = i[0].find('_20')
     if dpos > 0:
         d = i[0][dpos + 1:dpos + 11]
@@ -99,17 +99,13 @@ for i in fl:
     else:
         i.append('unknown')
 
-#find day numbers
+#find day numbers[6]
 dates.sort()
 for i in fl:
     if i[5] in dates:
         i.append(dates.index(i[5])+1)
     else:
         i.append(0)
-    
-
-
-
 
 
 print ''
@@ -123,10 +119,10 @@ outputfile = root.filename.replace('/','\\')
 
 print outputfile
 
-csvtxt = ['Day,Date,Category,Pixval,Flag,Name,Path,Path including Name\n']
+csvtxt = ['Day,Date,Band,Res,Proc,PrBase,quality,Collection,Orbit,Tile,Sat,Cam,Flag,Name,Path,Path including Name\n']
 # build csv
 for i in fl:
-    csvtxt.append(str(i[6]) + ',' + i[5] + ',' + i[3] + ',' + i[4] + ',,' + i[1] + ',' + i[2] + ',' + i[0] + '\n')
+    csvtxt.append(str(i[6]) + ',' + i[5] + ',' + i[4] + ',,' + i[3] + ',,,,,,,,,' + i[1] + ',' + i[2] + ',' + i[0] + '\n')
 
 f = open(outputfile, 'w')
 f.writelines(csvtxt)

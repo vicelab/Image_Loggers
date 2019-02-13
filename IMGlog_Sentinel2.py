@@ -202,10 +202,10 @@ outputfile = root.filename.replace('/','\\')
 
 print outputfile
 
-csvtxt = ['Day,Date,Band,Res,ProcLvl,ProcBase,Sat,Tile,Orbit,Flag,Name,Path,Path including Name\n']
+csvtxt = ['Day,Date,Band,Res,Proc,PrBase,quality,Collection,Orbit,Tile,Sat,Cam,Flag,Name,Path,Path including Name\n']
 # build csv
 for i in fl:
-    csvtxt.append(str(i[12]) + ',' + i[3] + ',' + i[5] + i[6] + ',' + i[11] + ',' + i[8] + ',' + i[9] + ',' + i[7] + ',' + i[4] + ',' + i[10] + ',,' + i[1] + ',' + i[2] + ',' + i[0] + '\n')
+    csvtxt.append(str(i[12]) + ',' + i[3] + ',' + i[5] + i[6] + ',' + i[11] + ',' + i[8] + ',' + i[9] + ',,,' + i[10] + ',' + i[4] + ',' + i[7] + ',,,' + i[1] + ',' + i[2] + ',' + i[0] + '\n')
 
 f = open(outputfile, 'w')
 f.writelines(csvtxt)
